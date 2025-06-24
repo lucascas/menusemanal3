@@ -1,0 +1,251 @@
+{
+  "meals": [
+    {
+      "name": "Calabaza napolitana con ensalada y papas noisette",
+      "type": "Cena",
+      "ingredients": ["calabaza", "salsa napolitana", "ensalada", "papas noisette"]
+    },
+    {
+      "name": "Taza taza",
+      "type": "Almuerzo",
+      "ingredients": ["ingredientes de taza taza"]
+    },
+    {
+      "name": "Fajitas de carne",
+      "type": "Cena",
+      "ingredients": ["carne", "tortillas", "pimientos", "cebolla"]
+    },
+    {
+      "name": "Ensalada con pollo",
+      "type": "Almuerzo",
+      "ingredients": ["pollo", "lechuga", "tomate", "pepino"]
+    },
+    {
+      "name": "Ensalada con atún",
+      "type": "Almuerzo",
+      "ingredients": ["atún", "lechuga", "tomate", "cebolla"]
+    },
+    {
+      "name": "Carne by Lu",
+      "type": "Cena",
+      "ingredients": ["carne", "condimentos"]
+    },
+    {
+      "name": "Pizza Mezetta freezer",
+      "type": "Almuerzo",
+      "ingredients": ["pizza congelada"]
+    },
+    {
+      "name": "Mila con ensalada",
+      "type": "Almuerzo",
+      "ingredients": ["milanesa", "lechuga", "tomate"]
+    },
+    {
+      "name": "Tarteletas jyQ",
+      "type": "Cena",
+      "ingredients": ["masa de tarta", "jamón", "queso"]
+    },
+    {
+      "name": "Tarteletas de puerro y brócoli",
+      "type": "Cena",
+      "ingredients": ["masa de tarta", "puerro", "brócoli"]
+    },
+    {
+      "name": "Fideos con atún y tomates",
+      "type": "Cena",
+      "ingredients": ["fideos", "atún", "tomates"]
+    },
+    {
+      "name": "Churrascos pollo con ensalada y papitas",
+      "type": "Almuerzo",
+      "ingredients": ["pollo", "ensalada", "papas"]
+    },
+    {
+      "name": "Salmón con espárragos",
+      "type": "Cena",
+      "ingredients": ["salmón", "espárragos"]
+    },
+    {
+      "name": "Medallones de pescado con ensalada",
+      "type": "Almuerzo",
+      "ingredients": ["medallones de pescado", "ensalada"]
+    },
+    {
+      "name": "Lomito con arroz y vegetales",
+      "type": "Cena",
+      "ingredients": ["lomito", "arroz", "vegetales"]
+    },
+    {
+      "name": "Giacomo con aceite y queso",
+      "type": "Almuerzo",
+      "ingredients": ["pasta giacomo", "aceite", "queso"]
+    },
+    {
+      "name": "Ensalada de pollo, cebada y verduritas",
+      "type": "Almuerzo",
+      "ingredients": ["pollo", "cebada", "verduras variadas"]
+    },
+    {
+      "name": "Carne Lita con papas y ensalada",
+      "type": "Cena",
+      "ingredients": ["carne", "papas", "ensalada"]
+    },
+    {
+      "name": "Pasta salad con muzzarella, espinaca y cherries",
+      "type": "Almuerzo",
+      "ingredients": ["pasta", "muzzarella", "espinaca", "tomates cherry"]
+    },
+    {
+      "name": "Omelette con ensalada",
+      "type": "Almuerzo",
+      "ingredients": ["huevos", "queso", "ensalada"]
+    },
+    {
+      "name": "Tortellini freezer",
+      "type": "Cena",
+      "ingredients": ["tortellini congelados"]
+    },
+    {
+      "name": "Mila de soja con ensalada",
+      "type": "Almuerzo",
+      "ingredients": ["milanesa de soja", "ensalada"]
+    },
+    {
+      "name": "Medallón de merluza con ensalada y papas",
+      "type": "Cena",
+      "ingredients": ["medallón de merluza", "ensalada", "papas"]
+    },
+    {
+      "name": "Albóndigas de pollo con ensalada",
+      "type": "Almuerzo",
+      "ingredients": ["albóndigas de pollo", "ensalada"]
+    },
+    {
+      "name": "Fideos con langostinos",
+      "type": "Cena",
+      "ingredients": ["fideos", "langostinos"]
+    },
+    {
+      "name": "Pollo bolsita con vegetales",
+      "type": "Cena",
+      "ingredients": ["pollo", "vegetales variados"]
+    },
+    {
+      "name": "Rapiditas con vacío, verduras y queso",
+      "type": "Almuerzo",
+      "ingredients": ["rapiditas", "carne de vacío", "verduras", "queso"]
+    }
+  ],
+  "ingredients": [
+    "calabaza",
+    "salsa napolitana",
+    "ensalada",
+    "papas noisette",
+    "carne",
+    "tortillas",
+    "pimientos",
+    "cebolla",
+    "pollo",
+    "lechuga",
+    "tomate",
+    "pepino",
+    "atún",
+    "pizza congelada",
+    "milanesa",
+    "masa de tarta",
+    "jamón",
+    "queso",
+    "puerro",
+    "brócoli",
+    "fideos",
+    "espárragos",
+    "salmón",
+    "medallones de pescado",
+    "lomito",
+    "arroz",
+    "vegetales",
+    "pasta giacomo",
+    "aceite",
+    "cebada",
+    "muzzarella",
+    "espinaca",
+    "tomates cherry",
+    "huevos",
+    "tortellini congelados",
+    "milanesa de soja",
+    "medallón de merluza",
+    "papas",
+    "albóndigas de pollo",
+    "langostinos",
+    "rapiditas",
+    "carne de vacío"
+  ],
+  "sampleWeekPlan": [
+    {
+      "day": "Lunes",
+      "meals": [
+        {
+          "type": "Almuerzo",
+          "name": "Mila con ensalada"
+        },
+        {
+          "type": "Cena",
+          "name": "Tarteletas jyQ y puerro y brócoli"
+        }
+      ]
+    },
+    {
+      "day": "Martes",
+      "meals": [
+        {
+          "type": "Almuerzo",
+          "name": "Tarteletas"
+        },
+        {
+          "type": "Cena",
+          "name": "Fideos con atún y tomates"
+        }
+      ]
+    },
+    {
+      "day": "Miércoles",
+      "meals": [
+        {
+          "type": "Almuerzo",
+          "name": "Churrascos pollo con ensalada y papitas"
+        },
+        {
+          "type": "Cena",
+          "name": "Salmón con espárragos"
+        }
+      ]
+    },
+    {
+      "day": "Jueves",
+      "meals": [
+        {
+          "type": "Almuerzo",
+          "name": "Medallones de pescado con ensalada"
+        },
+        {
+          "type": "Cena",
+          "name": "Lomito con arroz y vegetales"
+        }
+      ]
+    },
+    {
+      "day": "Viernes",
+      "meals": [
+        {
+          "type": "Almuerzo",
+          "name": "Giacomo con aceite y queso"
+        },
+        {
+          "type": "Cena",
+          "name": "Delivery"
+        }
+      ]
+    }
+  ]
+}
+

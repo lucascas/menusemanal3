@@ -1,0 +1,33 @@
+[
+  {
+    "nombre": "Pasta con salsa boloñesa",
+    "tipo": "pastas",
+    "ingredientes": "Pasta, carne molida, tomate, cebolla, ajo, zanahoria, apio, vino tinto, aceite de oliva, sal, pimienta"
+  },
+  {
+    "nombre": "Pollo al horno",
+    "tipo": "carnes",
+    "ingredientes": "Pollo, limón, ajo, romero, tomillo, aceite de oliva, sal, pimienta"
+  },
+  {
+    "nombre": "Ensalada César",
+    "tipo": "otros",
+    "ingredientes": "Lechuga romana, pollo a la parrilla, pan tostado, queso parmesano, salsa César"
+  },
+  {
+    "nombre": "Salmón a la parrilla",
+    "tipo": "carnes",
+    "ingredientes": "Salmón, limón, eneldo, aceite de oliva, sal, pimienta"
+  },
+  {
+    "nombre": "Risotto de champiñones",
+    "tipo": "otros",
+    "ingredientes": "Arroz arborio, champiñones, cebolla, ajo, vino blanco, caldo de verduras, queso parmesano, mantequilla"
+  },
+  {
+    "nombre": "Tacos de carne",
+    "tipo": "carnes",
+    "ingredientes": "Carne molida, tortillas de maíz, cebolla, cilantro, limón, salsa"
+  }
+]
+
