@@ -5,7 +5,7 @@ import ApiKeyManager from "@/app/components/ApiKeyManager"
 import { Button } from "@/components/ui/button"
 import { ChevronRight, Home, Settings, LogOut, ChevronDown, Key } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useSession } from "next-auth/react"
+import { useAuth } from "@/hooks/useAuth"
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -14,7 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function ApiKeysPage() {
   const router = useRouter()
-  const { data: session } = useSession()
+  const { user } = useAuth()
   const [isEndpointsOpen, setIsEndpointsOpen] = useState(true)
   const [isAuthOpen, setIsAuthOpen] = useState(true)
   const [isExamplesOpen, setIsExamplesOpen] = useState(true)
