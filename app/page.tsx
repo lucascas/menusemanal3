@@ -1,14 +1,26 @@
-import { Suspense } from "react"
+"use client"
+
+import { useAuth } from "@/hooks/useAuth"
 import HomeContent from "./components/HomeContent"
 
-export default function Home({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined }
-}) {
-  return (
-    <Suspense fallback={<div>Cargando...</div>}>
-      <HomeContent defaultTab={searchParams.tab as string} />
-    </Suspense>
-  )
+export default function Home() {
+  const { user, isAuthenticated, isLoading } = useAuth()
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div>Cargando...</div>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div>No autenticado</div>
+      </div>
+    )
+  }
+
+  return <HomeContent />
 }

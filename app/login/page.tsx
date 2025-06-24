@@ -1,10 +1,19 @@
-import { Suspense } from "react"
-import LoginForm from "./LoginForm"
+"use client"
+
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 
 export default function LoginPage() {
+  const router = useRouter()
+
+  useEffect(() => {
+    // Redirigir inmediatamente a la página principal
+    router.replace("/")
+  }, [router])
+
   return (
-    <Suspense fallback={<div>Cargando...</div>}>
-      <LoginForm />
-    </Suspense>
+    <div className="flex items-center justify-center min-h-screen">
+      <div>Redirigiendo...</div>
+    </div>
   )
 }
