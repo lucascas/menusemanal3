@@ -1,42 +1,53 @@
 import { NextResponse } from "next/server"
-import dbConnect from "@/lib/dbConnect"
-import WeeklyMenu from "@/models/WeeklyMenu"
+
+// Datos mock para menús
+const mockMenus = [
+  {
+    _id: "1",
+    fecha: new Date().toISOString(),
+    menu: {
+      Lunes: {
+        almuerzo: "Pollo a la plancha",
+        cena: "Pasta con tomate",
+      },
+      Martes: {
+        almuerzo: "Ensalada mixta",
+        cena: "Pescado al horno",
+      },
+    },
+    ingredientes: ["pollo", "pasta", "tomate", "lechuga", "pescado"],
+    user: "mock-user",
+    casa: "mock-casa",
+  },
+]
+
+const menus = [...mockMenus]
 
 export async function GET() {
   try {
-    await dbConnect()
-
-    const menus = await WeeklyMenu.find({}).limit(20)
     return NextResponse.json(menus)
   } catch (error) {
     console.error("Error fetching weekly menus:", error)
-
-    // Datos mock si falla la BD
-    return NextResponse.json([])
+    return NextResponse.json(mockMenus)
   }
 }
 
 export async function POST(request: Request) {
   try {
-    await dbConnect()
     const menuData = await request.json()
 
-    const menu = await WeeklyMenu.create({
-      ...menuData,
-      user: "mock-user",
-      casa: "mock-casa",
-    })
-    return NextResponse.json(menu)
-  } catch (error) {
-    console.error("Error creating weekly menu:", error)
-
-    const menuData = await request.json()
-    return NextResponse.json({
+    const newMenu = {
       _id: Date.now().toString(),
       ...menuData,
       user: "mock-user",
       casa: "mock-casa",
-    })
+    }
+
+    menus.push(newMenu)
+    return NextResponse.json(newMenu)
+  } catch (error) {
+    console.error("Error creating weekly menu:", error)
+    return NextResponse.json({ error: "Error al crear el menú" }, { status: 500 })
   }
 }
 

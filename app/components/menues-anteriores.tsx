@@ -4,7 +4,10 @@ import { useState, useEffect } from "react"
 import { Card, CardHeader, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog"
-import { useRouter } from "next/navigation"
+// Cambiar:
+// import { useRouter } from "next/navigation"
+// Por:
+import { useRouter } from "next/router"
 import { toast } from "@/components/ui/use-toast"
 import { Pencil, Trash2, Loader2, Bug } from "lucide-react"
 import {
@@ -70,7 +73,8 @@ export default function MenuesAnteriores() {
 
   const usarMenuNuevamente = (menu: MenuSemanal) => {
     localStorage.setItem("weeklyMenu", JSON.stringify(menu.menu))
-    router.push("/?tab=planner")
+    // Cambiar router.push por window.location
+    window.location.href = "/?tab=planner"
     toast({
       title: "Menú cargado",
       description: "El menú ha sido cargado en el planificador",
