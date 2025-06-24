@@ -164,6 +164,40 @@ export default function MenuesAnteriores() {
           <Bug className="h-4 w-4 mr-2" />
           {debugMode ? "Ocultar Debug" : "Mostrar Debug"}
         </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={async () => {
+            try {
+              const response = await fetch("/api/seed-database", { method: "POST" })
+              const result = await response.json()
+              if (result.success) {
+                toast({
+                  title: "Éxito",
+                  description: "Base de datos poblada exitosamente",
+                })
+                // Recargar los menús
+                const menusResponse = await fetch("/api/weeklyMenu")
+                const menusData = await menusResponse.json()
+                setMenues(menusData)
+              } else {
+                toast({
+                  title: "Error",
+                  description: "Error al poblar la base de datos",
+                  variant: "destructive",
+                })
+              }
+            } catch (error) {
+              toast({
+                title: "Error",
+                description: "Error al poblar la base de datos",
+                variant: "destructive",
+              })
+            }
+          }}
+        >
+          🌱 Poblar DB
+        </Button>
       </CardHeader>
       <CardContent>
         {debugMode && (

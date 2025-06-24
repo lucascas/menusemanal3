@@ -454,6 +454,29 @@ export default function Catalogo() {
                 <Refresh2 className="h-4 w-4 mr-2" />
                 Calcular Valor Energético
               </Button>
+              <Button
+                onClick={async () => {
+                  try {
+                    const response = await fetch("/api/seed-database", { method: "POST" })
+                    const result = await response.json()
+                    if (result.success) {
+                      setAlert({ message: "Base de datos poblada exitosamente", type: "success" })
+                      // Recargar las comidas
+                      const mealsResponse = await fetch("/api/meals")
+                      const mealsData = await mealsResponse.json()
+                      setMeals(mealsData)
+                      setComidasFiltradas(groupMealsByCategory(mealsData))
+                    } else {
+                      setAlert({ message: "Error al poblar la base de datos", type: "error" })
+                    }
+                  } catch (error) {
+                    setAlert({ message: "Error al poblar la base de datos", type: "error" })
+                  }
+                }}
+                className="w-full sm:w-auto bg-green-600 text-white hover:bg-green-700"
+              >
+                🌱 Poblar DB
+              </Button>
             </div>
           </div>
         </div>
