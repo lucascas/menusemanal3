@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogDescription } 
 // Cambiar:
 // import { useRouter } from "next/navigation"
 // Por:
-import { useRouter } from "next/router"
+// import { useRouter } from "next/router"
 import { toast } from "@/components/ui/use-toast"
 import { Pencil, Trash2, Loader2, Bug } from "lucide-react"
 import {
@@ -42,7 +42,8 @@ export default function MenuesAnteriores() {
   const [isLoading, setIsLoading] = useState(true)
   const [editingMenu, setEditingMenu] = useState<MenuSemanal | null>(null)
   const [debugMode, setDebugMode] = useState(false)
-  const router = useRouter()
+  // Eliminar la variable router
+  // const router = useRouter()
   const isMobile = useIsMobile()
 
   useEffect(() => {

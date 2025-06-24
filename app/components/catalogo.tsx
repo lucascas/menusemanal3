@@ -94,6 +94,7 @@ export default function Catalogo() {
   // const { data: session } = useSession()
 
   // Y reemplazar por:
+  // Sin autenticación - acceso directo
   const session = { user: { casa: { id: "mock-casa" } } } // Mock session
 
   useEffect(() => {
@@ -114,10 +115,8 @@ export default function Catalogo() {
       }
     }
 
-    if (session?.user?.casa?.id) {
-      fetchMeals()
-    }
-  }, [session])
+    fetchMeals()
+  }, []) // Eliminar session de las dependencias
 
   const groupMealsByCategory = useCallback((meals) => {
     return meals.reduce((acc, meal) => {
@@ -145,7 +144,7 @@ export default function Catalogo() {
       return
     }
 
-    if (!session?.user?.casa?.id) {
+    if (!"mock-casa") {
       setAlert({ message: "Debes pertenecer a una casa para agregar o editar comidas", type: "error" })
       return
     }
@@ -158,7 +157,7 @@ export default function Catalogo() {
         type: nuevaComida.tipo,
         ingredients: nuevaComida.ingredientes,
         mealTime: nuevaComida.comida,
-        casa: session.user.casa.id,
+        casa: "mock-casa",
         nutritionalInfo: nuevaComida.nutritionalInfo,
       }
 
@@ -350,20 +349,6 @@ export default function Catalogo() {
   const scrollToTop = () => {
     catalogRef.current?.scrollIntoView({ behavior: "smooth" })
   }
-
-  // Eliminar todo este bloque:
-  // if (!session?.user?.casa?.id) {
-  //   return (
-  //     <Card className="w-full">
-  //       <CardContent className="p-6">
-  //         <div className="text-center">
-  //           <h2 className="text-xl font-semibold mb-2">No perteneces a ninguna casa</h2>
-  //           <p className="text-gray-600">Debes unirte o crear una casa para ver el catálogo de comidas.</p>
-  //         </div>
-  //       </CardContent>
-  //     </Card>
-  //   )
-  // }
 
   if (isLoading) {
     return (

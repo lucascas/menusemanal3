@@ -1,28 +1,24 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
 import "./globals.css"
-import { Toaster } from "@/components/ui/toaster"
-
-const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Planneat - Planificador de Comidas",
-  description: "Planifica tus comidas semanales de forma fácil y organizada",
-    generator: 'v0.dev'
+  title: "v0 App",
+  description: "Created with v0",
+  generator: "v0.dev",
 }
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode
-}) {
+}>) {
   return (
-    <html lang="es">
-      <body className={inter.className}>
-        {children}
-        <Toaster />
-      </body>
+    <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+      </head>
+      <body>{children}</body>
     </html>
   )
 }
