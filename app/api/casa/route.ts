@@ -166,6 +166,28 @@ export async function PUT(request: Request) {
   }
 }
 
+// New GET handler for fetching houses
+export async function GET() {
+  try {
+    await dbConnect()
+
+    const casas = await Casa.find({}).limit(10)
+    return NextResponse.json(casas)
+  } catch (error) {
+    console.error("Error fetching casas:", error)
+
+    // Datos mock
+    return NextResponse.json([
+      {
+        _id: "mock-casa",
+        nombre: "Casa Demo",
+        propietario: "mock-user",
+        usuarios: ["mock-user"],
+      },
+    ])
+  }
+}
+
 export async function OPTIONS(request: Request) {
   return NextResponse.json({}, { status: 200 })
 }
