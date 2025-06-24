@@ -3,13 +3,13 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { ChevronRight, Home, Settings, ChevronDown, Key } from "lucide-react"
+import { ChevronRight, Home, Settings, ChevronDown, Key, ArrowLeft } from "lucide-react"
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import ApiKeyManager from "@/app/components/ApiKeyManager"
+import Link from "next/link"
 
 export default function ApiKeysPage() {
   const router = useRouter()
@@ -42,7 +42,7 @@ export default function ApiKeysPage() {
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-medium">Claves API</h3>
                   </div>
-                  <ApiKeyManager />
+                  <p className="text-gray-600">La gestión de API keys está temporalmente deshabilitada.</p>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -168,18 +168,28 @@ fetch('https://planneat.vercel.app/api/public/meals?startDate=2023-04-01&endDate
 
   // Desktop view
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b px-6 py-4 mb-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Configuración API</h1>
-          <Button variant="outline" onClick={() => router.back()}>
-            Volver
-          </Button>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-6">
+          <Link href="/">
+            <Button variant="ghost" className="mb-4">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Volver
+            </Button>
+          </Link>
+          <h1 className="text-2xl font-bold text-gray-900">Configuración de API</h1>
         </div>
-      </div>
 
-      <div className="max-w-5xl mx-auto px-6">
-        <div className="grid grid-cols-3 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>API Keys</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-600">La gestión de API keys está temporalmente deshabilitada.</p>
+          </CardContent>
+        </Card>
+
+        <div className="grid grid-cols-3 gap-6 mt-8">
           {/* Left Column - Categories */}
           <div className="col-span-1">
             <div className="bg-white rounded-md shadow-sm">
@@ -228,16 +238,6 @@ fetch('https://planneat.vercel.app/api/public/meals?startDate=2023-04-01&endDate
 
           {/* Right Column - Content */}
           <div className="col-span-2">
-            <Card className="mb-6">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-medium">Claves API</h3>
-                  <Badge variant="outline">Gestión</Badge>
-                </div>
-                <ApiKeyManager />
-              </CardContent>
-            </Card>
-
             {isEndpointsOpen && (
               <Card className="mb-6">
                 <CardContent className="p-6">
