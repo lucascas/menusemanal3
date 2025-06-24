@@ -24,4 +24,3 @@ export function removeAuthToken(): void {
 export function isAuthenticated(): boolean {
   return !!getAuthToken()
 }
-

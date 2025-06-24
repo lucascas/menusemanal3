@@ -67,4 +67,3 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     return NextResponse.json({ error: "Error al eliminar el menú" }, { status: 500 })
   }
 }
-

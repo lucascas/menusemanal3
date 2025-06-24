@@ -219,4 +219,3 @@ export async function DELETE() {
 export async function OPTIONS() {
   return NextResponse.json({}, { status: 200 })
 }
-

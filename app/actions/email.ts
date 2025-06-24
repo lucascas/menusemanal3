@@ -149,4 +149,3 @@ export async function sendInvitationEmail(to: string, from: string, casaNombre: 
     }
   }
 }
-

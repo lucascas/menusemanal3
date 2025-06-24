@@ -446,4 +446,3 @@ export default function AdminCasas({ updateStats }: AdminCasasProps) {
     </Card>
   )
 }
-

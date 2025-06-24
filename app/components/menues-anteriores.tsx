@@ -342,4 +342,3 @@ export default function MenuesAnteriores() {
     </Card>
   )
 }
-

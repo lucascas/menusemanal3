@@ -275,4 +275,3 @@ const mealDatabase: { [key: string]: MealSuggestion[] } = {
     },
   ],
 }
-

@@ -30,4 +30,3 @@ export function ensureModelsRegistered() {
 
   return registeredModels
 }
-

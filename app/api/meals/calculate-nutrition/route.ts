@@ -98,4 +98,3 @@ export async function POST() {
     return NextResponse.json({ error: "Error al procesar la información nutricional" }, { status: 500 })
   }
 }
-

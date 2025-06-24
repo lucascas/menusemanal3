@@ -12,4 +12,3 @@ export function getBaseUrl() {
   // Fallback para desarrollo local
   return "http://localhost:3000"
 }
-

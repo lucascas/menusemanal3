@@ -25,4 +25,3 @@ export default function AdminPage() {
     redirect("/administrador/login")
   }
 }
-

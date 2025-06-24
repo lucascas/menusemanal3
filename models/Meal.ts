@@ -40,4 +40,3 @@ const MealSchema = new mongoose.Schema({
 })
 
 export default mongoose.models.Meal || mongoose.model("Meal", MealSchema)
-

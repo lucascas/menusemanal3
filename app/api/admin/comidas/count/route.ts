@@ -56,4 +56,3 @@ export async function GET() {
 export async function OPTIONS() {
   return NextResponse.json({}, { status: 200 })
 }
-

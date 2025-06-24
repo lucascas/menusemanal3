@@ -18,4 +18,3 @@ export async function DELETE() {
   clearTestEmails()
   return NextResponse.json({ message: "Test emails cleared" })
 }
-

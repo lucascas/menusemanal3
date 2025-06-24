@@ -10,4 +10,3 @@ export async function GET() {
     return NextResponse.json({ error: "Fallo en la conexión a la base de datos", details: error }, { status: 500 })
   }
 }
-

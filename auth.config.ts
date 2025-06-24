@@ -7,16 +7,18 @@ export const authConfig: AuthConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user
-      const isOnDashboard = nextUrl.pathname.startsWith("/")
-      if (isOnDashboard) {
-        if (isLoggedIn) return true
-        return false // Redirect unauthenticated users to login page
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL("/", nextUrl))
+      const isOnLoginPage = nextUrl.pathname === "/login"
+      const isOnRegisterPage = nextUrl.pathname === "/register"
+      const isOnAuthPage = nextUrl.pathname.startsWith("/api/auth")
+
+      // Permitir acceso a páginas de auth sin restricciones
+      if (isOnLoginPage || isOnRegisterPage || isOnAuthPage) {
+        return true
       }
-      return true
+
+      // Para otras páginas, requerir autenticación
+      return isLoggedIn
     },
   },
   providers: [], // Add providers with an empty array
 }
-

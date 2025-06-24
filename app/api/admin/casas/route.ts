@@ -139,4 +139,3 @@ export async function POST(request: Request) {
 export async function OPTIONS() {
   return NextResponse.json({}, { status: 200 })
 }
-

@@ -169,4 +169,3 @@ export async function PUT(request: Request) {
 export async function OPTIONS(request: Request) {
   return NextResponse.json({}, { status: 200 })
 }
-

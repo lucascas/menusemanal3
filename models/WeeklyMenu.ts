@@ -32,4 +32,3 @@ const WeeklyMenuSchema = new mongoose.Schema({
 })
 
 export default mongoose.models.WeeklyMenu || mongoose.model("WeeklyMenu", WeeklyMenuSchema)
-

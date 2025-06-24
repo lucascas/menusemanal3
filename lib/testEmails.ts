@@ -20,4 +20,3 @@ export const getTestEmails = () => {
 export const clearTestEmails = () => {
   testEmails = []
 }
-

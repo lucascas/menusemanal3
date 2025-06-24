@@ -27,4 +27,3 @@ const InvitationSchema = new mongoose.Schema({
 })
 
 export default mongoose.models.Invitation || mongoose.model("Invitation", InvitationSchema)
-

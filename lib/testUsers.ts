@@ -9,4 +9,3 @@ export const testUsers = [
 export const findTestUser = (email: string) => {
   return testUsers.find((user) => user.email === email)
 }
-

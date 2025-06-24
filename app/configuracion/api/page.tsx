@@ -328,4 +328,3 @@ fetch('https://planneat.vercel.app/api/public/meals?startDate=2023-04-01&endDate
     </div>
   )
 }
-

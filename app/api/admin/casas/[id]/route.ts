@@ -114,4 +114,3 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 export async function OPTIONS() {
   return NextResponse.json({}, { status: 200 })
 }
-

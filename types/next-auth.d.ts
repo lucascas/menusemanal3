@@ -23,4 +23,3 @@ declare module "next-auth" {
     } | null
   }
 }
-

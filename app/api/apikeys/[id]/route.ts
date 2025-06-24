@@ -33,4 +33,3 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     return NextResponse.json({ error: "Error al eliminar la clave API" }, { status: 500 })
   }
 }
-

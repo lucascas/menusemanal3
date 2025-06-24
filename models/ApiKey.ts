@@ -34,4 +34,3 @@ const ApiKeySchema = new mongoose.Schema({
 ApiKeySchema.statics.generateKey = () => crypto.randomBytes(32).toString("hex")
 
 export default mongoose.models.ApiKey || mongoose.model("ApiKey", ApiKeySchema)
-

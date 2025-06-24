@@ -238,4 +238,3 @@ export default function MainLayout({ children, activeTab = "planner" }: MainLayo
     </div>
   )
 }
-

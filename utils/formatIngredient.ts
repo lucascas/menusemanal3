@@ -17,4 +17,3 @@ export function formatIngredient(ingredient: any): string {
   // Fallback for any other case
   return String(ingredient)
 }
-

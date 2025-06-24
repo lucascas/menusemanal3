@@ -22,4 +22,3 @@ const CasaSchema = new mongoose.Schema({
 const Casa = mongoose.models.Casa || mongoose.model("Casa", CasaSchema)
 
 export default Casa
-

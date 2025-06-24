@@ -63,4 +63,3 @@ test.describe("Sistema de autenticación", () => {
     await expect(page).toHaveURL("/login")
   })
 })
-

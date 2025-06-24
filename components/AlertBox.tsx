@@ -54,4 +54,3 @@ export const AlertBox: React.FC<AlertBoxProps> = ({ message, type, duration = 30
     </div>
   )
 }
-

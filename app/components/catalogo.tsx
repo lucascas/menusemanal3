@@ -668,4 +668,3 @@ export default function Catalogo() {
     </Card>
   )
 }
-

@@ -73,4 +73,3 @@ export async function GET(request: Request, { params }: { params: { id: string }
 export async function OPTIONS() {
   return NextResponse.json({}, { status: 200 })
 }
-

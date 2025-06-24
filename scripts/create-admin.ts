@@ -93,4 +93,3 @@ async function createAdmin() {
 
 // Ejecutar la función
 createAdmin()
-

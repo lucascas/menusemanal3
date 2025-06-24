@@ -645,4 +645,3 @@ export default function ConfiguracionCasa() {
     </div>
   )
 }
-

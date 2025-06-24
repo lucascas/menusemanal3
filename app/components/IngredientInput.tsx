@@ -70,4 +70,3 @@ export function IngredientInput({ ingredients, onChange }: IngredientInputProps)
     </div>
   )
 }
-

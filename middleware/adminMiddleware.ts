@@ -42,4 +42,3 @@ export async function adminMiddleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/administrador/login", request.url))
   }
 }
-

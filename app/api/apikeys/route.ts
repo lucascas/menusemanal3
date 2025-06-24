@@ -70,4 +70,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Error al crear la clave API" }, { status: 500 })
   }
 }
-
