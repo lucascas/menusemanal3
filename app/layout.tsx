@@ -2,8 +2,8 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
+import Providers from "./providers"
 import { Toaster } from "@/components/ui/toaster"
-import { MockSessionProvider } from "./components/MockSession"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -21,10 +21,10 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={inter.className}>
-        <MockSessionProvider>
+        <Providers>
           {children}
           <Toaster />
-        </MockSessionProvider>
+        </Providers>
       </body>
     </html>
   )

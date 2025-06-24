@@ -2,8 +2,7 @@
 
 import type React from "react"
 
-import { MockSessionProvider } from "@/components/MockSession"
-
+// Provider completamente mock sin dependencias de NextAuth
 export default function Providers({ children }: { children: React.ReactNode }) {
-  return <MockSessionProvider>{children}</MockSessionProvider>
+  return <>{children}</>
 }

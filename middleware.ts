@@ -1,25 +1,11 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
+// Middleware completamente deshabilitado
+// Solo mantenemos configuración mínima para evitar errores
 
 export const config = {
-  matcher: [
-    // Solo aplicar middleware a rutas de administrador
-    "/administrador/((?!login).*)",
-  ],
+  matcher: [],
 }
 
-export default function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
-
-  // Solo manejar rutas de administrador (mantener esta funcionalidad)
-  if (pathname.startsWith("/administrador") && pathname !== "/administrador/login") {
-    const adminToken = request.cookies.get("admin_token")?.value
-
-    if (!adminToken) {
-      return NextResponse.redirect(new URL("/administrador/login", request.url))
-    }
-  }
-
-  // Para todas las demás rutas, permitir acceso libre
-  return NextResponse.next()
+export default function middleware() {
+  // No hacer nada, permitir todo
+  return
 }

@@ -1,9 +1,7 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
-import { useSession, signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
@@ -18,6 +16,7 @@ import {
 import { Calendar, Utensils, Book, Settings, LogOut, User, Home, Key, ChevronDown, Menu, X } from "lucide-react"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { useAuth, signOut } from "@/hooks/useAuth"
 
 interface MainLayoutProps {
   children: React.ReactNode
@@ -25,7 +24,7 @@ interface MainLayoutProps {
 }
 
 export default function MainLayout({ children, activeTab = "planner" }: MainLayoutProps) {
-  const { data: session } = useSession()
+  const { user } = useAuth()
   const router = useRouter()
   const isMobile = useIsMobile()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
@@ -33,6 +32,7 @@ export default function MainLayout({ children, activeTab = "planner" }: MainLayo
   const handleLogout = () => {
     localStorage.removeItem("onboardingComplete")
     signOut()
+    // No redirigir, solo limpiar localStorage
   }
 
   const navItems = [
@@ -162,7 +162,7 @@ export default function MainLayout({ children, activeTab = "planner" }: MainLayo
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <Home className="mr-2 h-4 w-4" />
-                <span className="truncate max-w-[200px]">Casa: {session?.user?.casa?.nombre}</span>
+                <span className="truncate max-w-[200px]">Casa: {user?.casa?.nombre}</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
@@ -207,7 +207,7 @@ export default function MainLayout({ children, activeTab = "planner" }: MainLayo
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="flex items-center gap-2">
                       <User className="h-4 w-4" />
-                      <span>{session?.user?.name || "Usuario"}</span>
+                      <span>{user?.name || "Usuario"}</span>
                       <ChevronDown className="h-4 w-4 opacity-50" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -216,7 +216,7 @@ export default function MainLayout({ children, activeTab = "planner" }: MainLayo
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>
                       <Home className="mr-2 h-4 w-4" />
-                      <span>Casa: {session?.user?.casa?.nombre}</span>
+                      <span>Casa: {user?.casa?.nombre}</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleLogout}>
                       <LogOut className="mr-2 h-4 w-4" />

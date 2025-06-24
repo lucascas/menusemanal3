@@ -2,163 +2,169 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { useAuth } from "@/components/MockSession"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { useToast } from "@/hooks/use-toast"
+import { useAuth } from "@/hooks/useAuth"
 
-const ConfiguracionCasa = () => {
-  const router = useRouter()
-  const [direccion, setDireccion] = useState("")
-  const [ciudad, setCiudad] = useState("")
-  const [codigoPostal, setCodigoPostal] = useState("")
-  const [pais, setPais] = useState("")
-  const [habitantes, setHabitantes] = useState(1)
-  const [mascotas, setMascotas] = useState(false)
-
-  // Antes
-  // const { data } = useSession()
-  // const user = data?.user
-
-  // Después
+export default function ConfiguracionCasa() {
   const { user } = useAuth()
+  const router = useRouter()
+  const { toast } = useToast()
+  const [loading, setLoading] = useState(false)
+  const [casaData, setCasaData] = useState({
+    nombre: "",
+    descripcion: "",
+  })
+  const [usuarios, setUsuarios] = useState([])
+  const [inviteEmail, setInviteEmail] = useState("")
 
   useEffect(() => {
-    if (!user) {
-      router.push("/")
-    }
-  }, [user, router])
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    if (!user?.email) {
-      console.error("User email is not available.")
-      return
-    }
-
-    const casaData = {
-      direccion,
-      ciudad,
-      codigoPostal,
-      pais,
-      habitantes,
-      mascotas,
-      email: user.email,
-    }
-
-    try {
-      const response = await fetch("/api/casa", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(casaData),
+    if (user?.casa) {
+      setCasaData({
+        nombre: user.casa.nombre || "",
+        descripcion: "Casa de prueba - datos mock",
       })
+      // Mock usuarios
+      setUsuarios([
+        {
+          _id: "1",
+          email: "usuario1@ejemplo.com",
+          name: "Usuario 1",
+        },
+        {
+          _id: "2",
+          email: "usuario2@ejemplo.com",
+          name: "Usuario 2",
+        },
+      ])
+    }
+  }, [user])
 
-      if (response.ok) {
-        // Redirect to dashboard or a success page
-        router.push("/dashboard")
-      } else {
-        console.error("Error al guardar la configuración de la casa:", response.status)
-      }
+  const handleSaveCasa = async () => {
+    setLoading(true)
+    try {
+      // Simular guardado
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      toast({
+        title: "Casa actualizada",
+        description: "Los datos de la casa se han guardado correctamente (mock).",
+      })
     } catch (error) {
-      console.error("Error al enviar la solicitud:", error)
+      toast({
+        title: "Error",
+        description: "No se pudo actualizar la casa.",
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
     }
   }
 
-  if (!user) {
-    return <div>Cargando...</div>
+  const handleInviteUser = async () => {
+    if (!inviteEmail) return
+
+    setLoading(true)
+    try {
+      // Simular invitación
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      toast({
+        title: "Invitación enviada",
+        description: `Se ha enviado una invitación a ${inviteEmail} (mock).`,
+      })
+      setInviteEmail("")
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "No se pudo enviar la invitación.",
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
-    <div className="container mx-auto mt-8">
-      <h1 className="text-2xl font-bold mb-4">Configuración de tu Casa</h1>
-      <form onSubmit={handleSubmit} className="max-w-lg">
-        <div className="mb-4">
-          <label htmlFor="direccion" className="block text-gray-700 text-sm font-bold mb-2">
-            Dirección:
-          </label>
-          <input
-            type="text"
-            id="direccion"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            value={direccion}
-            onChange={(e) => setDireccion(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="ciudad" className="block text-gray-700 text-sm font-bold mb-2">
-            Ciudad:
-          </label>
-          <input
-            type="text"
-            id="ciudad"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            value={ciudad}
-            onChange={(e) => setCiudad(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="codigoPostal" className="block text-gray-700 text-sm font-bold mb-2">
-            Código Postal:
-          </label>
-          <input
-            type="text"
-            id="codigoPostal"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            value={codigoPostal}
-            onChange={(e) => setCodigoPostal(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="pais" className="block text-gray-700 text-sm font-bold mb-2">
-            País:
-          </label>
-          <input
-            type="text"
-            id="pais"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            value={pais}
-            onChange={(e) => setPais(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="habitantes" className="block text-gray-700 text-sm font-bold mb-2">
-            Número de Habitantes:
-          </label>
-          <input
-            type="number"
-            id="habitantes"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            value={habitantes}
-            onChange={(e) => setHabitantes(Number.parseInt(e.target.value, 10))}
-            min="1"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="mascotas" className="block text-gray-700 text-sm font-bold mb-2">
-            ¿Tienes Mascotas?
-          </label>
-          <input
-            type="checkbox"
-            id="mascotas"
-            className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            checked={mascotas}
-            onChange={(e) => setMascotas(e.target.checked)}
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Guardar Configuración
-        </button>
-      </form>
+    <div className="container mx-auto py-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Configuración de Casa</h1>
+        <Button variant="outline" onClick={() => router.back()}>
+          Volver
+        </Button>
+      </div>
+
+      <div className="grid gap-6">
+        {/* Información de la Casa */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Información de la Casa</CardTitle>
+            <CardDescription>Configura los datos básicos de tu casa</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="nombre">Nombre de la Casa</Label>
+              <Input
+                id="nombre"
+                value={casaData.nombre}
+                onChange={(e) => setCasaData({ ...casaData, nombre: e.target.value })}
+                placeholder="Ej: Casa de la Familia García"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="descripcion">Descripción</Label>
+              <Input
+                id="descripcion"
+                value={casaData.descripcion}
+                onChange={(e) => setCasaData({ ...casaData, descripcion: e.target.value })}
+                placeholder="Descripción opcional de la casa"
+              />
+            </div>
+            <Button onClick={handleSaveCasa} disabled={loading}>
+              {loading ? "Guardando..." : "Guardar Cambios"}
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Usuarios de la Casa */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Usuarios de la Casa</CardTitle>
+            <CardDescription>Gestiona los miembros de tu casa</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {usuarios.map((usuario) => (
+                <div key={usuario._id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <p className="font-medium">{usuario.name || usuario.email}</p>
+                    <p className="text-sm text-gray-500">{usuario.email}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <Separator className="my-6" />
+
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">Invitar Usuario</h3>
+              <div className="flex gap-2">
+                <Input
+                  type="email"
+                  placeholder="email@ejemplo.com"
+                  value={inviteEmail}
+                  onChange={(e) => setInviteEmail(e.target.value)}
+                />
+                <Button onClick={handleInviteUser} disabled={loading || !inviteEmail}>
+                  {loading ? "Enviando..." : "Invitar"}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }
-
-export default ConfiguracionCasa

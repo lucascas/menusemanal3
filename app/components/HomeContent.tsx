@@ -1,55 +1,58 @@
 "use client"
 
-import { useSession } from "next-auth/react"
+import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import MainLayout from "./MainLayout"
 import Planificador from "./planificador"
 import Catalogo from "./catalogo"
 import MenuesAnteriores from "./menues-anteriores"
-import MainLayout from "./MainLayout"
+import { useAuth } from "@/hooks/useAuth"
 
 interface HomeContentProps {
   defaultTab?: string
 }
 
-export default function HomeContent({ defaultTab = "planner" }: HomeContentProps) {
-  const { data: session, status } = useSession()
+export default function HomeContent({ defaultTab }: HomeContentProps) {
+  const { user, isAuthenticated, isLoading } = useAuth()
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(true)
   const searchParams = useSearchParams()
-  const wasInvited = searchParams.get("invited") === "true"
-  const currentTab = searchParams.get("tab") || defaultTab
+  const [activeTab, setActiveTab] = useState(defaultTab || "planner")
 
   useEffect(() => {
-    if (status === "authenticated") {
-      if (!session.user.casa && !wasInvited && !localStorage.getItem("onboardingComplete")) {
-        router.push("/onboarding")
-        return
-      }
-      setIsLoading(false)
+    const tab = searchParams.get("tab")
+    if (tab) {
+      setActiveTab(tab)
     }
-  }, [status, session, router, wasInvited])
+  }, [searchParams])
 
-  if (status === "loading" || isLoading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-muted-foreground">Cargando...</p>
-        </div>
+        <div>Cargando...</div>
       </div>
     )
   }
 
-  if (!session?.user?.casa && !wasInvited && !localStorage.getItem("onboardingComplete")) {
-    return null
+  if (!isAuthenticated) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div>Acceso libre - Usuario mock</div>
+      </div>
+    )
   }
 
-  return (
-    <MainLayout activeTab={currentTab}>
-      {currentTab === "planner" && <Planificador />}
-      {currentTab === "catalog" && <Catalogo />}
-      {currentTab === "previous" && <MenuesAnteriores />}
-    </MainLayout>
-  )
+  const renderContent = () => {
+    switch (activeTab) {
+      case "planner":
+        return <Planificador />
+      case "catalog":
+        return <Catalogo />
+      case "previous":
+        return <MenuesAnteriores />
+      default:
+        return <Planificador />
+    }
+  }
+
+  return <MainLayout activeTab={activeTab}>{renderContent()}</MainLayout>
 }
