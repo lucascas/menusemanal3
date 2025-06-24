@@ -526,7 +526,16 @@ export default function Catalogo() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-[600px] p-0">
           <div className="grid grid-rows-[auto,1fr,auto] h-full max-h-[600px]">
-            <div className="relative py-6 px-4 text-center border-b bg-green-600">
+            <div
+              className="relative py-6 px-4 text-center border-b"
+              style={{
+                backgroundImage:
+                  "url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/openart-image_2AaNge0F_1740438376698_raw-PmsHJhjheSfVWiqPCCZBPTPtPlwVPi.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              <div className="absolute inset-0 bg-black/50" />
               <DialogTitle className="relative z-10 text-white text-xl font-bold">
                 {editingMeal ? "Editar Comida" : "Agregar Nueva Comida"}
               </DialogTitle>
