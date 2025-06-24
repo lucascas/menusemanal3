@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/components/MockSession"
 
 const ConfiguracionCasa = () => {
@@ -22,7 +22,7 @@ const ConfiguracionCasa = () => {
 
   useEffect(() => {
     if (!user) {
-      router.push("/auth/signin")
+      router.push("/")
     }
   }, [user, router])
 
