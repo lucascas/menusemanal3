@@ -9,7 +9,6 @@ import { Dialog, DialogContent, DialogTitle, DialogFooter, DialogHeader } from "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { AlertBox } from "@/components/AlertBox"
 import { Search, Pencil, Loader2, Plus, RefreshCwIcon as Refresh2, Trash2, ArrowUp } from "lucide-react"
-import { useSession } from "next-auth/react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -72,7 +71,6 @@ const formatIngredient = (ingredient) => {
 }
 
 export default function Catalogo() {
-  const { data: session } = useSession()
   const [meals, setMeals] = useState([])
   const [busqueda, setBusqueda] = useState("")
   const [nuevaComida, setNuevaComida] = useState({
@@ -91,6 +89,12 @@ export default function Catalogo() {
   const [alert, setAlert] = useState(null)
   const [errorDetails, setErrorDetails] = useState(null)
   const catalogRef = useRef(null)
+
+  // Eliminar estas líneas:
+  // const { data: session } = useSession()
+
+  // Y reemplazar por:
+  const session = { user: { casa: { id: "mock-casa" } } } // Mock session
 
   useEffect(() => {
     const fetchMeals = async () => {
@@ -347,18 +351,19 @@ export default function Catalogo() {
     catalogRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
-  if (!session?.user?.casa?.id) {
-    return (
-      <Card className="w-full">
-        <CardContent className="p-6">
-          <div className="text-center">
-            <h2 className="text-xl font-semibold mb-2">No perteneces a ninguna casa</h2>
-            <p className="text-gray-600">Debes unirte o crear una casa para ver el catálogo de comidas.</p>
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
+  // Eliminar todo este bloque:
+  // if (!session?.user?.casa?.id) {
+  //   return (
+  //     <Card className="w-full">
+  //       <CardContent className="p-6">
+  //         <div className="text-center">
+  //           <h2 className="text-xl font-semibold mb-2">No perteneces a ninguna casa</h2>
+  //           <p className="text-gray-600">Debes unirte o crear una casa para ver el catálogo de comidas.</p>
+  //         </div>
+  //       </CardContent>
+  //     </Card>
+  //   )
+  // }
 
   if (isLoading) {
     return (
