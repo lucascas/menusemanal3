@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import MainLayout from "./components/MainLayout"
 import Planificador from "./components/planificador"
 import Catalogo from "./components/catalogo"
@@ -17,7 +18,14 @@ export default function Home({
 }
 
 function HomeContent({ defaultTab }: { defaultTab: string }) {
+  const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState(defaultTab)
+
+  // Sincronizar con los cambios de URL
+  useEffect(() => {
+    const tab = searchParams.get("tab") || "planner"
+    setActiveTab(tab)
+  }, [searchParams])
 
   const renderContent = () => {
     switch (activeTab) {
@@ -32,5 +40,9 @@ function HomeContent({ defaultTab }: { defaultTab: string }) {
     }
   }
 
-  return <MainLayout activeTab={activeTab}>{renderContent()}</MainLayout>
+  return (
+    <MainLayout activeTab={activeTab} setActiveTab={setActiveTab}>
+      {renderContent()}
+    </MainLayout>
+  )
 }

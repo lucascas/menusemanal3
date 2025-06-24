@@ -10,9 +10,10 @@ import Link from "next/link"
 interface MainLayoutProps {
   children: React.ReactNode
   activeTab: string
+  setActiveTab?: (tab: string) => void
 }
 
-export default function MainLayout({ children, activeTab }: MainLayoutProps) {
+export default function MainLayout({ children, activeTab, setActiveTab }: MainLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const navigation = [
@@ -20,6 +21,14 @@ export default function MainLayout({ children, activeTab }: MainLayoutProps) {
     { name: "Catálogo", href: "/?tab=catalog", icon: BookOpen, current: activeTab === "catalog" },
     { name: "Menús Anteriores", href: "/?tab=previous", icon: History, current: activeTab === "previous" },
   ]
+
+  const handleNavClick = (tab: string, href: string) => {
+    if (setActiveTab) {
+      setActiveTab(tab)
+    }
+    // También actualizar la URL
+    window.history.pushState({}, "", href)
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -35,17 +44,22 @@ export default function MainLayout({ children, activeTab }: MainLayoutProps) {
           </div>
           <nav className="flex-1 space-y-1 px-2 py-4">
             {navigation.map((item) => (
-              <Link
+              <button
                 key={item.name}
-                href={item.href}
-                className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                onClick={() => {
+                  handleNavClick(
+                    item.href.includes("planner") ? "planner" : item.href.includes("catalog") ? "catalog" : "previous",
+                    item.href,
+                  )
+                  setSidebarOpen(false)
+                }}
+                className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md w-full text-left ${
                   item.current ? "bg-gray-100 text-gray-900" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                 }`}
-                onClick={() => setSidebarOpen(false)}
               >
                 <item.icon className="mr-3 h-6 w-6" />
                 {item.name}
-              </Link>
+              </button>
             ))}
           </nav>
         </div>
@@ -59,16 +73,21 @@ export default function MainLayout({ children, activeTab }: MainLayoutProps) {
           </div>
           <nav className="flex-1 space-y-1 px-2 py-4">
             {navigation.map((item) => (
-              <Link
+              <button
                 key={item.name}
-                href={item.href}
-                className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                onClick={() =>
+                  handleNavClick(
+                    item.href.includes("planner") ? "planner" : item.href.includes("catalog") ? "catalog" : "previous",
+                    item.href,
+                  )
+                }
+                className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md w-full text-left ${
                   item.current ? "bg-gray-100 text-gray-900" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                 }`}
               >
                 <item.icon className="mr-3 h-6 w-6" />
                 {item.name}
-              </Link>
+              </button>
             ))}
           </nav>
           <div className="flex-shrink-0 p-4">
