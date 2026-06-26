@@ -47,17 +47,14 @@ const UserSchema = new mongoose.Schema({
   },
 })
 
-// Middleware pre-save para hashear contraseña
-UserSchema.pre("save", async function (next) {
+// Middleware pre-save para hashear contraseña.
+// Hook async: NO recibe `next` en la versión actual de Mongoose; si algo falla,
+// basta con lanzar el error (Mongoose rechaza la promesa automáticamente).
+UserSchema.pre("save", async function () {
   if (this.isModified("password") && this.password) {
-    try {
-      const salt = await bcrypt.genSalt(10)
-      this.password = await bcrypt.hash(this.password, salt)
-    } catch (error) {
-      return next(error as Error)
-    }
+    const salt = await bcrypt.genSalt(10)
+    this.password = await bcrypt.hash(this.password, salt)
   }
-  next()
 })
 
 // Método para comparar contraseñas

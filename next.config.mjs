@@ -16,15 +16,12 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Renombrado en Next 15: antes era experimental.serverComponentsExternalPackages
+  serverExternalPackages: ["jsonwebtoken", "bcryptjs"],
   experimental: {
     webpackBuildWorker: true,
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
-    serverComponentsExternalPackages: ["jsonwebtoken", "bcryptjs"],
-  },
-  // Asegurarse de que el middleware no se ejecute en el Edge Runtime
-  middleware: {
-    skipMiddlewareUrlNormalize: true,
   },
 }
 

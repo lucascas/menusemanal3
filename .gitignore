@@ -3,6 +3,9 @@
 # dependencies
 /node_modules
 
+# lockfile canónico del proyecto es pnpm-lock.yaml; ignoramos el de npm
+package-lock.json
+
 # next.js
 /.next/
 /out/

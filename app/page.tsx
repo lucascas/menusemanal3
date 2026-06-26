@@ -7,24 +7,20 @@ import Planificador from "./components/planificador"
 import Catalogo from "./components/catalogo"
 import MenuesAnteriores from "./components/menues-anteriores"
 
-export default function Home({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined }
-}) {
-  const defaultTab = (searchParams.tab as string) || "planner"
-
-  return <HomeContent defaultTab={defaultTab} />
+export default function Home() {
+  return <HomeContent />
 }
 
-function HomeContent({ defaultTab }: { defaultTab: string }) {
+function HomeContent() {
+  // Leemos el tab activo desde la URL con useSearchParams (cliente).
+  // Evitamos acceder a la prop `searchParams` directamente, que en Next 15
+  // está deprecado y generaba cientos de warnings en consola.
   const searchParams = useSearchParams()
-  const [activeTab, setActiveTab] = useState(defaultTab)
+  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "planner")
 
   // Sincronizar con los cambios de URL
   useEffect(() => {
-    const tab = searchParams.get("tab") || "planner"
-    setActiveTab(tab)
+    setActiveTab(searchParams.get("tab") || "planner")
   }, [searchParams])
 
   const renderContent = () => {

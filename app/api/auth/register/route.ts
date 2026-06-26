@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server"
-import bcrypt from "bcryptjs"
 import dbConnect from "@/lib/dbConnect"
 import User from "@/models/User"
 import Invitation from "@/models/Invitation"
@@ -103,13 +102,12 @@ export async function POST(request: Request) {
       await invitation.save()
     }
 
-    // Encriptar la contraseña
-    const hashedPassword = await bcrypt.hash(password, 10)
-
-    // Crear el nuevo usuario con la casa asignada si viene de una invitación
+    // Crear el nuevo usuario con la casa asignada si viene de una invitación.
+    // La contraseña se pasa en texto plano: el hook pre-save de User la hashea
+    // una sola vez. (Hashearla aquí provocaba un doble-hash y rompía el login.)
     const newUser = await User.create({
       email: email.toLowerCase(),
-      password: hashedPassword,
+      password,
       casa: casa ? casa._id : null,
     })
 
