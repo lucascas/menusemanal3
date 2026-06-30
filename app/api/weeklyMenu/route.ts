@@ -8,11 +8,12 @@ import { logger } from "@/lib/logger"
 export async function GET() {
   try {
     const session = await getServerSession(authOptions)
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+    if (!session?.user?.casa?.id) {
+      return NextResponse.json({ error: "No autorizado o sin casa asignada" }, { status: 401 })
     }
     await dbConnect()
-    const menus = await WeeklyMenu.find({ user: session.user.id }).sort({ fecha: -1 })
+    // Los menús semanales se comparten dentro de la casa (igual que el catálogo de comidas)
+    const menus = await WeeklyMenu.find({ casa: session.user.casa.id }).sort({ fecha: -1 })
     return NextResponse.json(menus)
   } catch (error) {
     logger.error("Error en GET /api/weeklyMenu:", error)
@@ -48,9 +49,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "El menú debe tener al menos un día" }, { status: 400 })
     }
 
-    // Verificar si ya existe un menú para esta fecha y usuario
+    // Verificar si ya existe un menú para esta fecha en la casa (compartido)
     const existingMenu = await WeeklyMenu.findOne({
-      user: session.user.id,
+      casa: session.user.casa.id,
       fecha: {
         $gte: new Date(new Date(data.fecha).setHours(0, 0, 0, 0)),
         $lt: new Date(new Date(data.fecha).setHours(23, 59, 59, 999)),
@@ -58,9 +59,10 @@ export async function POST(request: Request) {
     })
 
     if (existingMenu) {
-      // Actualizar el menú existente
+      // Actualizar el menú existente de la casa
       existingMenu.menu = data.menu
       existingMenu.ingredientes = data.ingredientes || []
+      existingMenu.user = session.user.id // registrar el último editor
 
       const updatedMenu = await existingMenu.save()
 

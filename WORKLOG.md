@@ -193,10 +193,17 @@ hay rutas privadas sin proteger ni IDOR entre casas; ownership en PUT/DELETE cor
   TODAS las casas → se acotó con `casa: nuevaCasa._id`.
 - Verificado con `git stash`: **0 errores de tipos nuevos** introducidos por los fixes.
 
+**Hallazgo MEDIO resuelto después (scope de `weeklyMenu`):**
+- Se decidió **scope por `casa`** (consistente con `meals`): la app es un planificador
+  de comidas de un hogar, el modelo `WeeklyMenu` ya guardaba `casa` (required) y el
+  frontend no envía `user` (lo asigna el server). Cambios en `weeklyMenu/route.ts`
+  (GET filtra por casa; el upsert del POST matchea por `(casa, fecha)` → un menú
+  compartido por semana, no uno por usuario) y `weeklyMenu/[id]/route.ts`
+  (GET/PUT/DELETE chequean pertenencia por casa). El campo `user` se conserva como
+  "último editor". Verificado: rutas compilan y devuelven 401 sin sesión; `tsc` sin
+  errores nuevos.
+
 **Hallazgos NO aplicados (requieren decisión, ver pendientes):**
-- **[MEDIO] Scope de `weeklyMenu`:** filtra por `user` mientras `meals` filtra por
-  `casa`. No es fuga (es más restrictivo), pero si los menús deben compartirse en la
-  casa, los convivientes no ven el menú de otro. **Decisión de producto pendiente.**
 - **[BAJO] `middleware.ts` rama admin:** solo valida *presencia* de la cookie
   `admin_token`, no su firma. OK si las vistas/APIs admin verifican el JWT server-side;
   conviene confirmarlo o validar la firma en el middleware.
@@ -222,7 +229,6 @@ hay rutas privadas sin proteger ni IDOR entre casas; ownership en PUT/DELETE cor
 
 ## 13. Pendientes tras esta sesión
 
-- **Decidir scope de `weeklyMenu`** (`user` vs `casa`) — hallazgo MEDIO del review.
 - **Confirmar validación del `admin_token`** (firma JWT, no solo presencia) — hallazgo BAJO.
 - **Implementar los tests** según `docs/TEST_PLAN.md` (instalar Vitest, etc.).
 - **Errores de tipos de Next 15**: migrar firmas de `params` a `Promise<{...}>`

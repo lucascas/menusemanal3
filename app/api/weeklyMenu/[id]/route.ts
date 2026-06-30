@@ -7,12 +7,12 @@ import WeeklyMenu from "@/models/WeeklyMenu"
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
     const session = await getServerSession(authOptions)
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+    if (!session?.user?.casa?.id) {
+      return NextResponse.json({ error: "No autorizado o sin casa asignada" }, { status: 401 })
     }
 
     await dbConnect()
-    const menu = await WeeklyMenu.findOne({ _id: params.id, user: session.user.id }).lean()
+    const menu = await WeeklyMenu.findOne({ _id: params.id, casa: session.user.casa.id }).lean()
 
     if (!menu) {
       return NextResponse.json({ error: "Menú no encontrado" }, { status: 404 })
@@ -28,8 +28,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
   try {
     const session = await getServerSession(authOptions)
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+    if (!session?.user?.casa?.id) {
+      return NextResponse.json({ error: "No autorizado o sin casa asignada" }, { status: 401 })
     }
 
     await dbConnect()
@@ -38,7 +38,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     // Verificar que el menú existe y pertenece al usuario
     const existingMenu = await WeeklyMenu.findOne({
       _id: params.id,
-      user: session.user.id,
+      casa: session.user.casa.id,
     })
 
     if (!existingMenu) {
@@ -49,8 +49,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       params.id,
       {
         ...menuData,
-        user: session.user.id, // Asegurar que el usuario no cambie
         casa: existingMenu.casa, // Evitar reasignar la casa vía body (mass-assignment)
+        user: session.user.id, // registrar el último editor dentro de la casa
       },
       { new: true, runValidators: true },
     )
@@ -65,8 +65,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
     const session = await getServerSession(authOptions)
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+    if (!session?.user?.casa?.id) {
+      return NextResponse.json({ error: "No autorizado o sin casa asignada" }, { status: 401 })
     }
 
     await dbConnect()
@@ -74,7 +74,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     // Verificar que el menú existe y pertenece al usuario
     const menu = await WeeklyMenu.findOne({
       _id: params.id,
-      user: session.user.id,
+      casa: session.user.casa.id,
     })
 
     if (!menu) {
