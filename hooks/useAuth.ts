@@ -1,42 +1,21 @@
 "use client"
 
-// Hook completamente mock que simula un usuario autenticado
+import { useSession, signOut as nextAuthSignOut } from "next-auth/react"
+
+// Hook de autenticación conectado a la sesión real de NextAuth.
 export function useAuth() {
+  const { data: session, status } = useSession()
+
   return {
-    user: {
-      id: "mock-user-id",
-      email: "usuario@ejemplo.com",
-      name: "Usuario de Prueba",
-      casa: {
-        id: "mock-casa-id",
-        nombre: "Casa de Prueba",
-      },
-    },
-    isAuthenticated: true,
-    isLoading: false,
+    user: session?.user ?? null,
+    isAuthenticated: status === "authenticated",
+    isLoading: status === "loading",
   }
 }
 
-// Mock de signOut que no hace nada
-export function signOut() {
-  console.log("Mock signOut - no action needed")
-  return Promise.resolve()
-}
+// Reexportamos signOut real de next-auth para mantener compatibilidad
+// con los componentes que lo importaban desde este módulo.
+export const signOut = nextAuthSignOut
 
-// Mock de useSession para compatibilidad
-export function useSession() {
-  return {
-    data: {
-      user: {
-        id: "mock-user-id",
-        email: "usuario@ejemplo.com",
-        name: "Usuario de Prueba",
-        casa: {
-          id: "mock-casa-id",
-          nombre: "Casa de Prueba",
-        },
-      },
-    },
-    status: "authenticated" as const,
-  }
-}
+// Reexport del useSession real por compatibilidad con imports previos.
+export { useSession }

@@ -4,7 +4,9 @@ import { authOptions } from "../auth/[...nextauth]/route"
 import dbConnect from "@/lib/dbConnect"
 import User from "@/models/User"
 import Casa from "@/models/Casa"
+import Invitation from "@/models/Invitation"
 import { sendInvitationEmail } from "@/app/actions/email"
+import crypto from "crypto"
 
 export const dynamic = "force-dynamic"
 
@@ -73,16 +75,29 @@ export async function POST(request: Request) {
     if (Array.isArray(invitados)) {
       for (const email of invitados) {
         if (email && typeof email === "string" && email.trim()) {
+          const emailTrimmed = email.trim()
           try {
-            const result = await sendInvitationEmail(email.trim(), session.user.email, nuevaCasa.nombre)
+            // Generar token y registrar la invitación para que pueda canjearse
+            const token = crypto.randomBytes(32).toString("hex")
+            await Invitation.deleteMany({ email: emailTrimmed })
+            const invitation = await Invitation.create({
+              token,
+              email: emailTrimmed,
+              casa: nuevaCasa._id,
+              used: false,
+            })
+
+            const result = await sendInvitationEmail(emailTrimmed, session.user.email, nuevaCasa.nombre, token)
             if (result.success) {
-              invitacionesEnviadas.push(email.trim())
+              invitacionesEnviadas.push(emailTrimmed)
             } else {
-              invitacionesFallidas.push(email.trim())
+              // Si falla el envío, eliminar la invitación creada
+              await Invitation.findByIdAndDelete(invitation._id)
+              invitacionesFallidas.push(emailTrimmed)
             }
           } catch (error) {
             console.error(`Error al enviar invitación a ${email}:`, error)
-            invitacionesFallidas.push(email.trim())
+            invitacionesFallidas.push(emailTrimmed)
           }
         }
       }
@@ -166,25 +181,29 @@ export async function PUT(request: Request) {
   }
 }
 
-// New GET handler for fetching houses
+// GET: devuelve la casa del usuario autenticado
 export async function GET() {
   try {
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.casa?.id) {
+      return NextResponse.json({ error: "No autorizado o sin casa asignada" }, { status: 401 })
+    }
+
     await dbConnect()
 
-    const casas = await Casa.find({}).limit(10)
-    return NextResponse.json(casas)
-  } catch (error) {
-    console.error("Error fetching casas:", error)
+    const casa = await Casa.findById(session.user.casa.id)
+    if (!casa) {
+      return NextResponse.json({ error: "Casa no encontrada" }, { status: 404 })
+    }
 
-    // Datos mock
-    return NextResponse.json([
-      {
-        _id: "mock-casa",
-        nombre: "Casa Demo",
-        propietario: "mock-user",
-        usuarios: ["mock-user"],
-      },
-    ])
+    return NextResponse.json({
+      id: casa._id.toString(),
+      nombre: casa.nombre,
+      creador: casa.creador?.toString() ?? null,
+    })
+  } catch (error) {
+    console.error("Error fetching casa:", error)
+    return NextResponse.json({ error: "Error al obtener la casa" }, { status: 500 })
   }
 }
 
