@@ -85,15 +85,9 @@ export async function POST(request: Request) {
       ...savedMenu.toObject(),
       message: "Menú creado correctamente",
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error general en POST /api/weeklyMenu:", error)
-    return NextResponse.json(
-      {
-        error: "Error al guardar el menú",
-        details: error.message,
-      },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: "Error al guardar el menú" }, { status: 500 })
   }
 }
 

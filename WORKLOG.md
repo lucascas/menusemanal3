@@ -173,15 +173,65 @@ login con Google no funciona, el de credenciales sí).
   `sendInvitationEmail`), sin errores nuevos ni referencias rotas a los archivos
   borrados.
 
-## 12. Pendientes tras esta sesión
+## 12. Revisión con subagentes + hardening (2026-06-30)
 
-- **Commitear/pushear:** los cambios siguen solo en el working tree. Sugerido:
-  `git add -A && git commit` en `fix/local-setup-and-bugs` (no mergeado a `master`).
-- **Errores de tipos de Next 15** (216): migrar firmas de `params` a `Promise<{...}>`
+Se corrieron subagentes (instalados vía `claude-code-templates`) sobre el revert de auth.
+
+### 12.1 code-reviewer (revisión del commit `2c37f39`)
+Veredicto: **APROBADO** para mergear — 0 críticos, 0 altos, 2 medios, 4 bajos. No
+hay rutas privadas sin proteger ni IDOR entre casas; ownership en PUT/DELETE correcto.
+
+**Hallazgos aplicados (fixes en el working tree):**
+- `app/api/weeklyMenu/route.ts`: el POST devolvía `details: error.message` en el 500
+  (fuga de internals) → ahora devuelve solo el mensaje genérico, como el resto de APIs.
+- `app/api/weeklyMenu/[id]/route.ts` (PUT) y `app/api/meals/[id]/route.ts` (PUT):
+  el spread del body permitía reasignar `casa`/`user` (mass-assignment) → se fuerza
+  `casa: existingMenu.casa` / `user: existingMeal.user`.
+- `middleware.ts`: el `matcher` no excluía los assets de `public/` (imágenes recibían
+  307 a `/login` sin sesión) → se agregó la exclusión de extensiones estáticas.
+- `app/api/casa/route.ts`: `Invitation.deleteMany({ email })` borraba invitaciones de
+  TODAS las casas → se acotó con `casa: nuevaCasa._id`.
+- Verificado con `git stash`: **0 errores de tipos nuevos** introducidos por los fixes.
+
+**Hallazgos NO aplicados (requieren decisión, ver pendientes):**
+- **[MEDIO] Scope de `weeklyMenu`:** filtra por `user` mientras `meals` filtra por
+  `casa`. No es fuga (es más restrictivo), pero si los menús deben compartirse en la
+  casa, los convivientes no ven el menú de otro. **Decisión de producto pendiente.**
+- **[BAJO] `middleware.ts` rama admin:** solo valida *presencia* de la cookie
+  `admin_token`, no su firma. OK si las vistas/APIs admin verifican el JWT server-side;
+  conviene confirmarlo o validar la firma en el middleware.
+- **[BAJO] Helper de invitaciones:** `casa/route.ts` y `casa/invitar/route.ts` tienen
+  lógica de invitación divergente; conviene extraer un helper compartido.
+- Notas de hardening preexistentes (no de este commit): otros `details: error.message`
+  en `casa/route.ts` (POST/PUT) e `invitar/route.ts`; `invitar/route.ts:75` devuelve el
+  token de invitación en la respuesta; endpoints de dev sin proteger.
+
+### 12.2 test-engineer (plan de testing)
+- Creado **`docs/TEST_PLAN.md`** (solo plan, sin instalar nada ni tocar código).
+  Recomienda **Vitest** (+ Playwright ya presente para E2E), pirámide ~60/30/10, y
+  prioriza P0: aislamiento por casa/usuario (IDOR), autenticación (authorize/callbacks),
+  middleware; P1: anti-regresión del doble-hash de password e invitaciones. Incluye
+  casos concretos y setup propuesto (mongodb-memory-server, mock de `getServerSession`).
+- **El proyecto sigue SIN tests ni runner** — el plan es la referencia para implementarlos.
+
+### 12.3 documentation-expert (README)
+- **`README.md`** actualizado: se eliminó el framing de "modo mock / demo abierto"
+  (ya no es cierto) y se documentó la autenticación real (login en `/login`, usuario
+  demo, Google OAuth opcional, seed necesario para loguearse). Setup y `.env.local`
+  conservados.
+
+## 13. Pendientes tras esta sesión
+
+- **Decidir scope de `weeklyMenu`** (`user` vs `casa`) — hallazgo MEDIO del review.
+- **Confirmar validación del `admin_token`** (firma JWT, no solo presencia) — hallazgo BAJO.
+- **Implementar los tests** según `docs/TEST_PLAN.md` (instalar Vitest, etc.).
+- **Errores de tipos de Next 15**: migrar firmas de `params` a `Promise<{...}>`
   en rutas `[id]`, `cookies()` async en rutas admin, e instalar `@types/jsonwebtoken`.
-  No bloquean el dev server, pero impiden un `tsc`/build limpio.
+  No bloquean el dev server ni el build (`ignoreBuildErrors: true`), pero impiden un
+  `tsc` limpio.
 - **Google OAuth:** configurar `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` si se quiere
   login con Google.
+- **Crear el PR** (`gh` no está instalado; branch ya pusheado).
 - Pendientes previos que siguen vigentes: regenerar `pnpm-lock.yaml` con pnpm,
   typo cosmético en `next.config.mjs`, `.git` perdido en el home (ver punto 1).
 

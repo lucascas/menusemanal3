@@ -79,7 +79,7 @@ export async function POST(request: Request) {
           try {
             // Generar token y registrar la invitación para que pueda canjearse
             const token = crypto.randomBytes(32).toString("hex")
-            await Invitation.deleteMany({ email: emailTrimmed })
+            await Invitation.deleteMany({ email: emailTrimmed, casa: nuevaCasa._id })
             const invitation = await Invitation.create({
               token,
               email: emailTrimmed,

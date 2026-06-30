@@ -17,8 +17,10 @@ docker run -d --name menusemanal-mongo -p 27017:27017 -v menusemanal-mongo-data:
 # 3. Dependencias  (--legacy-peer-deps por un conflicto de peer deps de nodemailer)
 npm install --legacy-peer-deps
 
-# 4. Datos de prueba (opcional)
-MONGODB_URI="mongodb://localhost:27017/menusemanal" node scripts/seed-demo.cjs
+# 4. Datos de prueba + usuario demo (necesario para poder loguearse)
+node scripts/seed-demo.cjs
+# (o, si tu base no está en la URI por defecto:)
+# MONGODB_URI="mongodb://localhost:27017/menusemanal" node scripts/seed-demo.cjs
 
 # 5. Levantar
 npm run dev          # http://localhost:3000
@@ -39,23 +41,28 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 Opcionales: `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` (login con Google),
 `HUGGING_FACE_API_KEY` (sugerencias por IA), `EMAILJS_*` (envío de mails).
 
+## Autenticación
+
+La app usa **autenticación real con NextAuth** (estrategia JWT). El acceso está protegido:
+
+- **Login en `/login`** con email y contraseña (provider Credentials).
+- `middleware.ts` protege las rutas: sin sesión, redirige a `/login` (las páginas
+  `/login` y `/register` son públicas).
+- Las rutas de API (`app/api/*`) validan la sesión con `getServerSession` y
+  **filtran los datos por casa/usuario**: cada casa solo ve y modifica lo suyo.
+  Sin sesión devuelven `401`.
+
 ### Usuario demo (tras correr el seed)
 
 - **Email:** `demo@demo.com`
 - **Password:** `demo1234`
 
-## ⚠️ Estado actual: MODO MOCK (sin autenticación real)
+### Login con Google (opcional)
 
-La app está intencionalmente en "modo demo abierto". **No es apta para producción tal cual.**
-
-- `hooks/useAuth.ts` devuelve siempre un usuario falso fijo (`isAuthenticated: true`).
-- `middleware.ts` está vacío: no protege ninguna ruta.
-- Las rutas de API (`app/api/*`) no validan sesión ni filtran por casa: **cualquiera ve y modifica todos los datos**.
-- `app/api/meals` POST hardcodea `casa: "mock-casa"` (string) → fallaría al castear a ObjectId.
-
-Para volver a auth real habría que: reconectar `useAuth` a NextAuth (`useSession`), agregar
-`SessionProvider`, reactivar el middleware y hacer que cada API lea la sesión y filtre por
-`casa`. Es un refactor que toca toda la capa de datos.
+El provider de Google existe pero está deshabilitado en local: requiere configurar
+`GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET` en `.env.local`. Sin esas variables,
+solo funciona el login con credenciales (en consola aparece el aviso "Credenciales
+de Google no configuradas").
 
 ## Notas
 

@@ -50,6 +50,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       {
         ...mealData,
         casa: session.user.casa.id, // Asegurar que la casa no cambie
+        user: existingMeal.user, // Evitar reasignar el user vía body (mass-assignment)
       },
       { new: true, runValidators: true },
     )

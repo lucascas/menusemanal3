@@ -11,8 +11,9 @@ export const config = {
      * - _next/static, _next/image (assets de Next)
      * - favicon.ico
      * - login, register (páginas públicas de autenticación)
+     * - archivos estáticos de public/ (imágenes, etc.) para que se sirvan sin sesión
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|login|register).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|login|register|.*\\.(?:png|jpg|jpeg|gif|svg|ico|webp)$).*)",
   ],
 }
 

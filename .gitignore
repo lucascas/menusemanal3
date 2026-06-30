@@ -28,3 +28,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# repos clonados localmente (no forman parte de este proyecto)
+/pixel-agents/
