@@ -8,33 +8,7 @@ import Admin from "@/models/Admin"
 import bcrypt from "bcryptjs"
 import { ensureModelsRegistered } from "@/lib/models"
 
-// Función simplificada para verificar la autenticación
-async function verifyAdminAuth() {
-  try {
-    const cookieStore = cookies()
-    const token = cookieStore.get("admin_token")?.value
-
-    if (!token) {
-      return null
-    }
-
-    // Extraer el ID del admin del token
-    const adminId = token.split("_")[0]
-
-    // Verificar que el admin existe
-    await dbConnect()
-    const admin = await Admin.findById(adminId)
-
-    if (!admin) {
-      return null
-    }
-
-    return admin
-  } catch (error) {
-    logger.error("Error al verificar autenticación:", error)
-    return null
-  }
-}
+import { verifyAdminToken as verifyAdminAuth } from "@/lib/adminAuth"
 
 export async function GET() {
   try {

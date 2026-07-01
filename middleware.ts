@@ -26,7 +26,11 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Rutas del panel de administrador (esquema de auth propio con cookie admin_token)
+  // Rutas del panel de administrador (esquema de auth propio con cookie admin_token).
+  // NOTA: el middleware corre en runtime Edge, donde `jsonwebtoken` no funciona, así
+  // que aquí solo hacemos un filtro barato por presencia de la cookie. La verificación
+  // real de la FIRMA del JWT ocurre server-side (runtime Node) en las páginas
+  // `app/administrador/*` y en las APIs `app/api/admin/*` vía `verifyAdminToken()`.
   if (pathname.startsWith("/administrador")) {
     if (pathname === "/administrador/login") {
       return NextResponse.next()

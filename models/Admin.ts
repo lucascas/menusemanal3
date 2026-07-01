@@ -28,17 +28,14 @@ const AdminSchema = new mongoose.Schema({
   },
 })
 
-// Middleware pre-save para hashear contraseña
-AdminSchema.pre("save", async function (next) {
+// Middleware pre-save para hashear contraseña.
+// Hook async: en la versión actual de Mongoose NO recibe `next` (lanzar el error
+// directamente). Mismo criterio que el hook de `models/User.ts`.
+AdminSchema.pre("save", async function () {
   if (this.isModified("password") && this.password) {
-    try {
-      const salt = await bcrypt.genSalt(10)
-      this.password = await bcrypt.hash(this.password, salt)
-    } catch (error) {
-      return next(error as Error)
-    }
+    const salt = await bcrypt.genSalt(10)
+    this.password = await bcrypt.hash(this.password, salt)
   }
-  next()
 })
 
 // Método para comparar contraseñas

@@ -227,9 +227,44 @@ hay rutas privadas sin proteger ni IDOR entre casas; ownership en PUT/DELETE cor
   demo, Google OAuth opcional, seed necesario para loguearse). Setup y `.env.local`
   conservados.
 
-## 13. Pendientes tras esta sesión
+## 13. Fix de autenticación admin (2026-06-30) — más grave de lo estimado
 
-- **Confirmar validación del `admin_token`** (firma JWT, no solo presencia) — hallazgo BAJO.
+Al investigar el hallazgo BAJO del review (el middleware admin solo chequeaba
+*presencia* de la cookie `admin_token`, no su firma) se descubrió un problema mayor,
+**preexistente** (ajeno al revert de auth):
+
+- Las **6 APIs admin** (`usuarios`, `usuarios/[id]`, `casas`, `casas/[id]`,
+  `casas/[id]/usuarios`, `comidas/count`) tenían cada una una copia de
+  `verifyAdminAuth()` que hacía `token.split("_")[0]` + `Admin.findById(id)`: **NO
+  verificaba la firma del JWT**. El `admin_token` real es un JWT firmado con
+  `ADMIN_JWT_SECRET` (dot-separated), así que ese parseo era a la vez inseguro
+  (un token `<adminObjectId>_x` habría autorizado) e inconsistente con el formato real.
+- `middleware/adminMiddleware.ts` SÍ hacía `jwt.verify`, pero era **código muerto**
+  (el `middleware.ts` real no lo importaba).
+- `models/Admin.ts` tenía el **mismo bug del hook `pre("save")` con `next()`** que ya
+  se había corregido en `User.ts` → `"next is not a function"`, que rompía por completo
+  la creación de admins (no se podía ni sembrar un admin).
+
+**Fix aplicado:**
+- Nuevo helper `lib/adminAuth.ts` → `verifyAdminToken()`: verifica la FIRMA del JWT con
+  `ADMIN_JWT_SECRET` y luego confirma que el admin existe. Devuelve el doc `Admin` o `null`.
+- Las 6 APIs admin importan el helper (aliasado como `verifyAdminAuth`); se eliminaron
+  las 6 copias rotas.
+- `models/Admin.ts`: hook `pre("save")` async sin `next` (mismo criterio que `User.ts`).
+- Eliminado `middleware/adminMiddleware.ts` (muerto). El `middleware.ts` mantiene el
+  chequeo de presencia como filtro barato en Edge (donde `jsonwebtoken` no corre) y se
+  documentó que la verificación real de firma ocurre server-side (Node) en las APIs y
+  páginas admin.
+
+**Verificado en caliente** (admin sembrado vía `GET /api/admin/setup`, login real):
+- token JWT válido → **200**; token forjado `<objectid>_x` → **401**; JWT con firma
+  manipulada → **401**; sin token → **401**.
+- `tsc`: 340 → **334** (se eliminaron los errores de las 6 copias); único error nuevo
+  en `lib/adminAuth.ts` es el conocido `@types/jsonwebtoken` faltante (categoría
+  preexistente, no regresión).
+
+## 14. Pendientes tras esta sesión
+
 - **Implementar los tests** según `docs/TEST_PLAN.md` (instalar Vitest, etc.).
 - **Errores de tipos de Next 15**: migrar firmas de `params` a `Promise<{...}>`
   en rutas `[id]`, `cookies()` async en rutas admin, e instalar `@types/jsonwebtoken`.
